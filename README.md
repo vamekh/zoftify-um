@@ -27,8 +27,8 @@ Follow these instructions to quickly set up the project for development or testi
 #### 1. Clone the Repository
 
    ```bash
-   git clone https://github.com/your-repo-url.git
-   cd your-project-directory
+   git clone https://github.com/vamekh/zoftify-um.git
+   cd zoftify-um
    ```
 
 #### 2. Create a .env File
