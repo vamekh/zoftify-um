@@ -8,7 +8,8 @@ role checking for certain operations.
 
 ### Table of Contents
 
-* [Quick Setup](#quick-setup)
+* [Quick Setup And Run](#quick-setup-and-run)
+* [Authentication and API Access](#authentication-and-api-access)
 * [Features](#features)
 * [Technologies](#technologies)
 * [Installation](#installation)
@@ -18,9 +19,8 @@ role checking for certain operations.
 * [Seeding Initial Data](#seeding-initial-data)
 * [API Endpoints](#api-endpoints)
 * [Role-Based Access Control](#role-based-access-control)
-* [Testing](#testing)
 
-## Quick Setup
+## Quick Setup and Run
 
 Follow these instructions to quickly set up the project for development or testing.
 
@@ -54,6 +54,44 @@ This script will:
 * Generate the Prisma client.
 * Apply Prisma database migrations.
 * Optionally seed the database with initial data
+
+#### 4. Run
+
+Simply use npm start script
+   ```bash
+   npm run start
+   ```
+
+The API will be available at http://localhost:3000.
+
+## Authentication and API Access
+### 1. Authentication Requirement
+In order to access most of the API endpoints, users must first authenticate by obtaining a JWT token. The API is protected with JWT authentication, meaning that each request to a protected route must include a valid JWT token in the Authorization header.
+
+#### Steps to Access the API:
+1. Login: Send a `POST` request to the `/auth/sign-in` endpoint with your email and password to obtain a JWT token. 
+
+   
+   **Credentials for the root user are configured in `.env` file**
+
+   Example request:
+   ```bash
+   POST /auth/login
+   Content-Type: application/json
+   Body: { "email": "admin@example.com", "password": "password123" }
+   ```
+2. Receive a JWT Token: The response will include a token like this:
+
+   ```json
+   {
+       "access_token": "your_jwt_token_here"
+   }
+   ```
+3. Access Protected Endpoints: Include the token in the `Authorization` header of your subsequent requests:
+
+   `Authorization: Bearer your_jwt_token_here`
+   
+
 ## Features
 
 * User CRUD: Create, read, update, and delete users.
@@ -141,41 +179,22 @@ npm run seed
 This will execute the seed script located in the `prisma/seed.ts` file.
 
 ## API Endpoints
-
-Below are some of the main API endpoints:
+Following API endpoints are available:
 
 ### Authentication
-
+Public endpoints
 * Sign In: `POST /auth/sign-in`
 * Sign Up: `POST /auth/sign-up`
 
 ### User Management
-
-* Get All Users (Admin Only): `GET /users`
-* Create User (Admin Only): `POST /users`
+These endpoints are accessible only for admin users.
+* Get All Users: `GET /users`
+* Create User: `POST /users`
 * Get User by ID: `GET /users/:id`
-* Update User (Admin Only): `PUT /users/:id`
-* Delete User (Admin Only): `DELETE /users/:id`
+* Update User: `PUT /users/:id`
+* Delete User: `DELETE /users/:id`
 
 ## Role-Based Access Control
 
-Some routes are protected by role-based access control (RBAC). You need to be authenticated as an `admin` to perform
-certain operations (e.g., creating or deleting users).
-
-In the controllers, the role check is enforced using the `@Roles('admin')` decorator. The user’s role is included in the
-JWT token and extracted via the `RolesGuard`.
-
-## Testing
-
-You can add unit tests to ensure your services and guards are functioning correctly. To run the tests:
-
-```bash
-npm run test
-```
-
-Fork the repository.
-Create a new branch (git checkout -b feature/your-feature).
-Make your changes.
-Commit your changes (git commit -am 'Add new feature').
-Push to the branch (git push origin feature/your-feature).
-Open a pull request.
+CRUD routes are protected by role-based access control (RBAC). You need to be authenticated as an `admin` to perform
+certain operations (e.g., creating or deleting users). To authenticate 

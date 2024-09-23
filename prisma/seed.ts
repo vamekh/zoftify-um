@@ -1,24 +1,27 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import { configDotenv } from 'dotenv';
 
 const prisma = new PrismaClient();
+configDotenv();
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('123', 10);
+  const rootEmail = process.env.ADMIN_EMAIL || 'admin@zoftify.com';
+  const rootPassword = process.env.ADMIN_PASSWORD || '123';
+  const hashedPassword = await bcrypt.hash(rootPassword, 10);
 
   // Create initial users
-  const root = await prisma.user.upsert({
-    where: { email: 'root@zoftify.com' },
+  await prisma.user.upsert({
+    where: { email: rootEmail },
     update: {},
     create: {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'root@zoftify.com',
+      firstName: 'Zoftify',
+      lastName: 'Root User',
+      email: rootEmail,
       isAdmin: true,
       password: hashedPassword,
     },
   });
-  console.log({ root });
 }
 
 main()

@@ -24,24 +24,24 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { AdminGuard } from '../../auth/guards/admin.guard';
 import { Response } from 'express';
 
-@Controller()
+@Controller('users')
 @UseGuards(JwtAuthGuard, AdminGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('user')
+  @Post()
   async addUser(@Body() userData: UserCreateDto): Promise<UserInfoDto> {
     const addedUser = this.userService.createUser(userData);
     return plainToInstance(UserInfoDto, addedUser);
   }
 
-  @Delete('user/:id')
+  @Delete('/:id')
   async removeUser(@Param('id', ParseIntPipe) id: number): Promise<UserInfoDto> {
     const user = this.userService.deleteUser(id);
     return plainToInstance(UserInfoDto, user);
   }
 
-  @Put('user/:id')
+  @Put('/:id')
   async editUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() changes: UserEditDto,
@@ -53,7 +53,7 @@ export class UserController {
     return plainToInstance(UserInfoDto, updatedUser);
   }
 
-  @Get('user/:id')
+  @Get('/:id')
   async getUser(@Param('id', ParseIntPipe) id: number): Promise<UserInfoDto> {
     const user = await this.userService.getUserById(id);
     if (!user) {
@@ -62,7 +62,7 @@ export class UserController {
     return plainToInstance(UserInfoDto, user);
   }
 
-  @Get('user')
+  @Get('')
   async getUsers(
     @Query() pageAndSort: PaginationWithSortingDto,
     @Body() filters: UserFilterDto,

@@ -56,6 +56,9 @@ export class UserService {
   }
 
   async deleteUser(id: number): Promise<User> {
+    if (!(await this.userRepository.exists({ id }))) {
+      throw new BadRequestException("User doesn't exist");
+    }
     return this.userRepository.delete({ id });
   }
 }
