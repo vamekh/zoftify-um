@@ -18,7 +18,14 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed": "ts-node prisma/seed.ts"
+
+    "prisma:generate": "npx prisma generate",  // Generates the Prisma client
+    "prisma:migrate": "npx prisma migrate dev --name init",  // Runs Prisma migrations
+    "prisma:seed": "ts-node prisma/seed.ts",  // Custom seeding script (if implemented)
+
+    // Initial setup script
+    "setup": "npm install && npm run prisma:generate && npm run prisma:migrate && npm run prisma:seed"
+
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
